@@ -1,0 +1,139 @@
+{
+  "name": "Article",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Article title"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Article subtitle"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly slug"
+    },
+    "content": {
+      "type": "string",
+      "description": "Article content in HTML/Markdown"
+    },
+    "excerpt": {
+      "type": "string",
+      "description": "Short teaser text"
+    },
+    "cover_image": {
+      "type": "string",
+      "description": "Cover image URL"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "alltag",
+        "familie",
+        "kreativitaet",
+        "fotografie",
+        "film",
+        "musik",
+        "ki",
+        "arbeit",
+        "gesellschaft",
+        "philosophie",
+        "technologie",
+        "persoenliche-entwicklung"
+      ],
+      "description": "Article category"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Article tags"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "scheduled"
+      ],
+      "default": "draft",
+      "description": "Publication status"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether article is featured"
+    },
+    "publish_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Publication date"
+    },
+    "reading_time": {
+      "type": "number",
+      "description": "Estimated reading time in minutes"
+    },
+    "meta_title": {
+      "type": "string",
+      "description": "SEO meta title"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "SEO meta description"
+    }
+  },
+  "required": [
+    "title",
+    "content",
+    "category",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.status": "published"
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

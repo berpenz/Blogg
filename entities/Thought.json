@@ -1,0 +1,95 @@
+{
+  "name": "Thought",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The thought, note, or observation"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "beobachtung",
+        "zitat",
+        "frage",
+        "notiz",
+        "erinnerung",
+        "idee"
+      ],
+      "description": "Type of thought"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for filtering"
+    },
+    "mood": {
+      "type": "string",
+      "enum": [
+        "nachdenklich",
+        "freudig",
+        "melancholisch",
+        "neugierig",
+        "ruhig",
+        "inspiriert"
+      ],
+      "description": "Mood of the thought"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the thought is publicly visible"
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.is_public": true
+        },
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
